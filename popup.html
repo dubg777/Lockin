@@ -1,0 +1,420 @@
+<!DOCTYPE html>
+<html lang="zh" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<title>Lockin</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Syne:wght@700;800;900&family=Noto+Sans+SC:wght@400;500;700&family=DM+Mono:wght@400;500&display=swap');
+
+:root {
+  --bg:       #f0eee8;
+  --ink:      #1a1612;
+  --ink-sub:  rgba(26,22,18,0.45);
+  --c1: #5E00CC;   /* Electric Violet  — Bionic        */
+  --c2: #00794A;   /* Forest Emerald   — Highlight     */
+  --c3: #CC0055;   /* Hot Magenta      — Spacing       */
+  --c4: #CC4400;   /* Vivid Orange     — Focus Mask    */
+  --c5: #0044CC;   /* Royal Blue       — Progress Bar  */
+  --c6: #007799;   /* Deep Cyan        — Float Widget  */
+  --c7: #336600;   /* Vivid Lime       — Reward        */
+  --c8: #AA0022;   /* Crimson Red      — Font Switch   */
+  --block-radius: 16px;
+  --gap: 10px;
+  --pad: 14px;
+  --glass-light: rgba(255,255,255,0.28);
+  --glass-border: rgba(255,255,255,0.55);
+}
+[data-theme="dark"] {
+  --bg:      #141210;
+  --ink:     #f0ece4;
+  --ink-sub: rgba(240,236,228,0.4);
+  --c1: #9933FF; --c2: #00BB66; --c3: #FF1177; --c4: #FF5500;
+  --c5: #2266FF; --c6: #00AACC; --c7: #55AA00; --c8: #EE1133;
+  --glass-light: rgba(0,0,0,0.22);
+  --glass-border: rgba(255,255,255,0.1);
+}
+
+*, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
+
+body {
+  width: 320px;
+  opacity: 0;
+  background: var(--bg);
+  font-family: 'Noto Sans SC', sans-serif;
+  color: var(--ink);
+  transition: background 0.25s, color 0.25s, opacity 0.12s;
+  overflow: hidden;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='200' height='200' filter='url(%23n)' opacity='1'/%3E%3C/svg%3E");
+  background-blend-mode: overlay;
+}
+
+/* ── HEADER ── */
+.header { padding: 16px var(--pad) 12px; display:flex; align-items:center; gap:10px; }
+.logo-mark {
+  width:40px; height:40px; border-radius:12px;
+  background:var(--ink); display:flex; align-items:center; justify-content:center;
+  flex-shrink:0; transition:background 0.25s;
+}
+.logo-mark svg { color:var(--bg); transition:color 0.25s; }
+.logo-text { flex:1; }
+.logo-name { font-family:'Syne',sans-serif; font-weight:900; font-size:17px; letter-spacing:-0.03em; color:var(--ink); line-height:1; }
+.logo-sub  { font-family:'DM Mono',monospace; font-size:9px; color:var(--ink-sub); letter-spacing:0.1em; margin-top:3px; }
+.theme-btn {
+  width:34px; height:34px; border-radius:10px;
+  border:2px solid var(--ink); background:transparent; cursor:pointer;
+  display:flex; align-items:center; justify-content:center;
+  font-size:15px; transition:background 0.12s,transform 0.1s; flex-shrink:0;
+}
+.theme-btn:hover  { background:var(--ink); }
+.theme-btn:active { transform:scale(0.9); }
+
+/* ── MASTER ── */
+.master-block {
+  margin:0 var(--pad) var(--gap);
+  border-radius:var(--block-radius); background:var(--ink);
+  padding:14px 16px; display:flex; align-items:center; justify-content:space-between;
+  cursor:pointer; transition:transform 0.1s,box-shadow 0.15s;
+  box-shadow:4px 4px 0 rgba(0,0,0,0.12); user-select:none;
+}
+.master-block:active { transform:translate(2px,2px); box-shadow:2px 2px 0 rgba(0,0,0,0.12); }
+.master-label  { font-family:'Syne',sans-serif; font-weight:800; font-size:18px; color:var(--bg); letter-spacing:-0.02em; line-height:1; }
+.master-row2   { display:flex; align-items:center; gap:8px; margin-top:4px; }
+.master-status { font-family:'DM Mono',monospace; font-size:10px; color:rgba(240,236,228,0.45); letter-spacing:0.08em; }
+.session-timer { font-family:'DM Mono',monospace; font-size:11px; font-weight:500; color:#00BB66; letter-spacing:0.06em; display:none; }
+.session-timer.show { display:inline; }
+.big-pill {
+  width:56px; height:30px; border-radius:15px;
+  background:rgba(255,255,255,0.12); position:relative; transition:background 0.2s; flex-shrink:0;
+}
+.big-pill::after {
+  content:''; position:absolute; left:3px; top:3px;
+  width:24px; height:24px; border-radius:50%;
+  background:rgba(255,255,255,0.35);
+  transition:transform 0.18s cubic-bezier(.4,0,.2,1),background 0.18s;
+}
+.big-pill.on { background:rgba(255,255,255,0.2); }
+.big-pill.on::after { transform:translateX(26px); background:#fff; }
+
+/* ── FEATURES GRID ── */
+.features { padding:0 var(--pad) var(--pad); display:grid; grid-template-columns:1fr 1fr; gap:var(--gap); transition:opacity 0.2s; }
+.features.disabled { opacity:0.3; pointer-events:none; }
+
+/* ── FEATURE BLOCK ── */
+.fblock {
+  border-radius:var(--block-radius); padding:14px 14px 12px;
+  position:relative; overflow:hidden; cursor:pointer;
+  box-shadow:4px 4px 0 rgba(0,0,0,0.1);
+  transition:transform 0.1s,box-shadow 0.1s; user-select:none;
+}
+.fblock:active { transform:translate(2px,2px); box-shadow:2px 2px 0 rgba(0,0,0,0.1); }
+.fblock::before {
+  content:''; position:absolute; inset:0;
+  background:var(--glass-light); backdrop-filter:blur(14px);
+  border:1px solid var(--glass-border); border-radius:var(--block-radius);
+  pointer-events:none; z-index:0;
+}
+.fblock-inner { position:relative; z-index:1; }
+.fblock.c1 { background:var(--c1); }
+.fblock.c2 { background:var(--c2); }
+.fblock.c3 { background:var(--c3); }
+.fblock.c4 { background:var(--c4); }
+.fblock.c5 { background:var(--c5); }
+.fblock.c6 { background:var(--c6); }
+.fblock.c7 { background:var(--c7); }
+.fblock.c8 { background:var(--c8); }
+.fblock.wide { grid-column:1 / -1; }
+
+.fblock-icon  { font-size:20px; margin-bottom:8px; display:block; line-height:1; }
+.fblock-name  { font-family:'Syne',sans-serif; font-weight:800; font-size:14px; color:#fff; letter-spacing:-0.02em; line-height:1.1; margin-bottom:4px; }
+.fblock-desc  { font-size:10px; color:rgba(255,255,255,0.6); line-height:1.4; }
+
+.fblock-tog {
+  position:absolute; top:12px; right:12px;
+  width:28px; height:16px; border-radius:8px;
+  background:rgba(255,255,255,0.2); border:1px solid rgba(255,255,255,0.35);
+  z-index:2; transition:background 0.15s;
+}
+.fblock-tog::after {
+  content:''; position:absolute; left:2px; top:2px;
+  width:10px; height:10px; border-radius:50%;
+  background:rgba(255,255,255,0.5);
+  transition:transform 0.15s cubic-bezier(.4,0,.2,1),background 0.15s;
+}
+.fblock-tog.on { background:rgba(255,255,255,0.35); }
+.fblock-tog.on::after { transform:translateX(12px); background:#fff; }
+
+.fblock-sub { margin-top:10px; display:none; }
+.fblock-sub.show { display:block; }
+
+/* ── WIDE-BLOCK SPLIT LAYOUT (info left / controls right) ── */
+.fblock.wide .fblock-inner { display:flex; gap:14px; align-items:flex-start; }
+.fblock.wide .fblock-info  { flex:0 0 auto; min-width:80px; }
+.fblock.wide .fblock-controls { flex:1; min-width:0; padding-right:36px; }
+.fblock.wide .fblock-sub  { margin-top:0; }
+.fblock.wide .fblock-sub.show { display:block; }
+/* spacing/focus blocks are wide but keep original stacked layout */
+.fblock.wide.stacked .fblock-inner { display:block; }
+
+/* swatches */
+.swatches { display:flex; gap:6px; flex-wrap:wrap; margin-top:8px; }
+.sw { width:20px; height:20px; border-radius:50%; cursor:pointer; border:2px solid transparent; transition:transform 0.12s,border-color 0.12s; }
+.sw:hover { transform:scale(1.2); }
+.sw.active { border-color:rgba(255,255,255,0.9); transform:scale(1.15); }
+
+/* slider */
+.fslider-row { margin-top:8px; }
+.fslider-row + .fslider-row { margin-top:10px; }
+.fslider-head { display:flex; justify-content:space-between; margin-bottom:6px; }
+.fslider-label { font-family:'DM Mono',monospace; font-size:9px; color:rgba(255,255,255,0.55); letter-spacing:0.1em; }
+.fslider-val   { font-family:'DM Mono',monospace; font-size:10px; color:#fff; font-weight:500; }
+input[type=range] { -webkit-appearance:none; width:100%; height:3px; background:rgba(255,255,255,0.25); border-radius:2px; outline:none; cursor:pointer; }
+input[type=range]::-webkit-slider-thumb { -webkit-appearance:none; width:16px; height:16px; border-radius:50%; background:#fff; box-shadow:0 1px 6px rgba(0,0,0,0.25); transition:transform 0.1s; }
+input[type=range]::-webkit-slider-thumb:hover { transform:scale(1.2); }
+
+/* weight option pills */
+.weight-options { display:flex; gap:5px; margin-top:10px; flex-wrap:wrap; }
+.weight-opt {
+  font-family:'DM Mono',monospace; font-size:9px; letter-spacing:0.04em;
+  color:rgba(255,255,255,0.7); border:1px solid rgba(255,255,255,0.3);
+  border-radius:6px; padding:4px 7px; cursor:pointer;
+  transition:background 0.12s,color 0.12s,border-color 0.12s;
+}
+.weight-opt:hover   { background:rgba(255,255,255,0.15); }
+.weight-opt.active  { background:rgba(255,255,255,0.9); color:var(--c1); border-color:transparent; font-weight:700; }
+
+/* font option pills */
+.font-options { display:flex; gap:6px; margin-top:10px; flex-wrap:wrap; }
+.font-opt {
+  font-family:'DM Mono',monospace; font-size:9px; letter-spacing:0.06em;
+  color:rgba(255,255,255,0.7); border:1px solid rgba(255,255,255,0.3);
+  border-radius:6px; padding:4px 8px; cursor:pointer;
+  transition:background 0.12s,color 0.12s,border-color 0.12s;
+}
+.font-opt:hover   { background:rgba(255,255,255,0.15); }
+.font-opt.active  { background:rgba(255,255,255,0.9); color:var(--c8); border-color:transparent; font-weight:500; }
+
+.lang-btn {
+  width:34px; height:34px; border-radius:10px;
+  border:2px solid var(--ink); background:transparent; cursor:pointer;
+  display:flex; align-items:center; justify-content:center;
+  font-family:'DM Mono',monospace; font-size:11px; font-weight:500;
+  color:var(--ink); letter-spacing:0.02em;
+  transition:background 0.12s,color 0.12s,transform 0.1s; flex-shrink:0;
+}
+.lang-btn:hover  { background:var(--ink); color:var(--bg); }
+.lang-btn:active { transform:scale(0.9); }
+@keyframes ripple { from{transform:scale(0);opacity:0.4} to{transform:scale(3);opacity:0} }
+.ripple-el { position:absolute; width:40px; height:40px; border-radius:50%; background:rgba(255,255,255,0.35); pointer-events:none; z-index:3; transform:scale(0); animation:ripple 0.35s ease-out forwards; }
+
+/* footer */
+.footer { padding:0 var(--pad) 14px; display:flex; align-items:center; justify-content:space-between; }
+.footer-ver { font-family:'DM Mono',monospace; font-size:9px; color:var(--ink-sub); letter-spacing:0.1em; }
+.reset-btn  { font-family:'DM Mono',monospace; font-size:9px; color:var(--ink-sub); background:none; border:none; cursor:pointer; padding:4px 8px; border-radius:6px; transition:background 0.12s,color 0.12s; }
+.reset-btn:hover  { background:var(--c8); color:#fff; }
+.reset-btn:active { transform:scale(0.95); }
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<div class="header">
+  <div class="logo-mark">
+    <svg width="26" height="18" viewBox="0 0 52 36" fill="none">
+      <rect x="1" y="1" width="20" height="20" rx="5" fill="none" stroke="currentColor" stroke-width="3"/>
+      <circle cx="40" cy="11" r="10" fill="none" stroke="currentColor" stroke-width="3"/>
+      <line x1="21" y1="11" x2="30" y2="11" stroke="currentColor" stroke-width="3" stroke-linecap="round"/>
+      <line x1="1"  y1="11" x2="-3" y2="11" stroke="currentColor" stroke-width="3" stroke-linecap="round"/>
+      <line x1="50" y1="11" x2="54" y2="11" stroke="currentColor" stroke-width="3" stroke-linecap="round"/>
+      <circle cx="11" cy="11" r="4.5" fill="currentColor"/>
+      <circle cx="40" cy="11" r="4.5" fill="currentColor"/>
+    </svg>
+  </div>
+  <div class="logo-text">
+    <div class="logo-name">Lockin</div>
+    <div class="logo-sub" data-i18n="tagline">LOCK IN · READ · FLOW</div>
+  </div>
+  <button class="theme-btn" id="themeBtn"><span id="themeIcon">🌙</span></button>
+  <button class="lang-btn" id="langBtn">中</button>
+</div>
+
+<!-- MASTER -->
+<div class="master-block" id="masterBlock">
+  <div class="master-left">
+    <div class="master-label" id="masterLabel" data-i18n="masterOff">开始专注</div>
+    <div class="master-row2">
+      <div class="master-status" id="masterStatus" data-i18n="masterStatusOff">点击启动所有功能</div>
+      <span class="session-timer" id="sessionTimer"></span>
+    </div>
+  </div>
+  <div class="big-pill" id="bigPill"></div>
+</div>
+
+<!-- FEATURES -->
+<div class="features disabled" id="features">
+
+  <!-- Bionic — c1 electric violet, wide, split layout -->
+  <div class="fblock c1 wide" id="fb-bionic">
+    <div class="fblock-tog" id="tog-bionic"></div>
+    <div class="fblock-inner">
+      <div class="fblock-info">
+        <span class="fblock-icon">✦</span>
+        <div class="fblock-name">Bionic<br>Reading</div>
+        <div class="fblock-desc" data-i18n="bionicDesc">加粗词首<br>锚定视线</div>
+      </div>
+      <div class="fblock-controls">
+        <div class="fblock-sub show" id="sub-bionic">
+          <div class="fslider-row">
+            <div class="fslider-head">
+              <span class="fslider-label" data-i18n="bionicAmtLabel">加粗比例</span>
+              <span class="fslider-val" id="bionicAmtVal">45%</span>
+            </div>
+            <input type="range" id="bionicAmtSlider" min="20" max="80" value="45">
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Line highlight — c2 forest emerald, wide, split layout -->
+  <div class="fblock c2 wide" id="fb-highlight">
+    <div class="fblock-tog" id="tog-highlight"></div>
+    <div class="fblock-inner">
+      <div class="fblock-info">
+        <span class="fblock-icon">◈</span>
+        <div class="fblock-name" data-i18n="hlName">行<br>高亮</div>
+        <div class="fblock-desc" data-i18n="hlDesc">跟随鼠标<br>标记位置</div>
+      </div>
+      <div class="fblock-controls">
+        <div class="fblock-sub show" id="sub-highlight">
+          <div class="swatches">
+            <div class="sw active" data-color="#FFF9C4" style="background:#FFF9C4"></div>
+            <div class="sw" data-color="#C8F0A0" style="background:#C8F0A0"></div>
+            <div class="sw" data-color="#BBDEFB" style="background:#BBDEFB"></div>
+            <div class="sw" data-color="#F8BBD0" style="background:#F8BBD0"></div>
+          </div>
+          <div class="fslider-row">
+            <div class="fslider-head">
+              <span class="fslider-label" data-i18n="hlHeightLabel">范围高度</span>
+              <span class="fslider-val" id="hlHeightVal">1.9em</span>
+            </div>
+            <input type="range" id="hlHeightSlider" min="80" max="320" step="10" value="185">
+          </div>
+          <div class="fslider-row">
+            <div class="fslider-head">
+              <span class="fslider-label" data-i18n="hlOpacityLabel">透明度</span>
+              <span class="fslider-val" id="hlOpacityVal">52%</span>
+            </div>
+            <input type="range" id="hlOpacitySlider" min="10" max="90" value="52">
+          </div>
+          <div class="fslider-row">
+            <div class="fslider-head">
+              <span class="fslider-label" data-i18n="hlPrecLabel">精细度</span>
+              <span class="fslider-val" id="hlPrecVal"></span>
+            </div>
+            <input type="range" id="hlPrecSlider" min="1" max="3" step="1" value="1">
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Line spacing — c3 hot magenta wide stacked -->
+  <div class="fblock c3 wide stacked" id="fb-spacing">
+    <div class="fblock-tog" id="tog-spacing"></div>
+    <div class="fblock-inner">
+      <span class="fblock-icon">↕</span>
+      <div class="fblock-name" data-i18n="spacingName">行间距</div>
+      <div class="fblock-desc" data-i18n="spacingDesc">降低文字密度，减少压迫感</div>
+      <div class="fblock-sub" id="sub-spacing">
+        <div class="fslider-row">
+          <div class="fslider-head"><span class="fslider-label">LINE HEIGHT</span><span class="fslider-val" id="spacingVal">2.0</span></div>
+          <input type="range" id="spacingSlider" min="14" max="30" value="20">
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Focus mask — c4 vivid orange wide stacked -->
+  <div class="fblock c4 wide stacked" id="fb-focus">
+    <div class="fblock-tog" id="tog-focus"></div>
+    <div class="fblock-inner">
+      <span class="fblock-icon">◎</span>
+      <div class="fblock-name" data-i18n="focusName">聚焦遮罩</div>
+      <div class="fblock-desc" data-i18n="focusDesc">遮暗上下区域，减少干扰</div>
+      <div class="fblock-sub" id="sub-focus">
+        <div class="fslider-row">
+          <div class="fslider-head"><span class="fslider-label" data-i18n="dimLabel">遮罩深度</span><span class="fslider-val" id="dimVal">85%</span></div>
+          <input type="range" id="dimSlider" min="0" max="100" value="85">
+        </div>
+        <div class="fslider-row">
+          <div class="fslider-head"><span class="fslider-label" data-i18n="bandLabel">垂直范围</span><span class="fslider-val" id="bandVal">15%</span></div>
+          <input type="range" id="bandSlider" min="5" max="45" value="15">
+        </div>
+        <div class="fslider-row">
+          <div class="fslider-head"><span class="fslider-label" data-i18n="hBandLabel">水平范围</span><span class="fslider-val" id="hBandVal">100%</span></div>
+          <input type="range" id="hBandSlider" min="30" max="100" value="100">
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Progress bar — c5 royal blue -->
+  <div class="fblock c5" id="fb-progress">
+    <div class="fblock-tog" id="tog-progress"></div>
+    <div class="fblock-inner">
+      <span class="fblock-icon">▬</span>
+      <div class="fblock-name" data-i18n="progressName">进度<br>顶栏</div>
+      <div class="fblock-desc" data-i18n="progressDesc">页面顶部<br>滚动进度</div>
+    </div>
+  </div>
+
+  <!-- Float widget — c6 deep cyan -->
+  <div class="fblock c6" id="fb-float">
+    <div class="fblock-tog" id="tog-float"></div>
+    <div class="fblock-inner">
+      <span class="fblock-icon">◉</span>
+      <div class="fblock-name" data-i18n="floatName">悬浮<br>进度球</div>
+      <div class="fblock-desc" data-i18n="floatDesc">页面内<br>可拖拽</div>
+    </div>
+  </div>
+
+  <!-- Focus reward — c7 vivid lime -->
+  <div class="fblock c7" id="fb-reward">
+    <div class="fblock-tog" id="tog-reward"></div>
+    <div class="fblock-inner">
+      <span class="fblock-icon">🎉</span>
+      <div class="fblock-name" data-i18n="rewardName">专注<br>奖励</div>
+      <div class="fblock-desc" data-i18n="rewardDesc">每10分钟<br>即时反馈</div>
+    </div>
+  </div>
+
+  <!-- Font switch — c8 crimson red -->
+  <div class="fblock c8" id="fb-font">
+    <div class="fblock-tog" id="tog-font"></div>
+    <div class="fblock-inner">
+      <span class="fblock-icon">Aa</span>
+      <div class="fblock-name" data-i18n="fontName">字体<br>切换</div>
+      <div class="fblock-desc" data-i18n="fontDesc">易读字体<br>减少阅读障碍</div>
+      <div class="fblock-sub" id="sub-font">
+        <div class="font-options">
+          <div class="font-opt active" data-font="default" data-i18n="fontDefault">默认</div>
+          <div class="font-opt" data-font="nunito">Nunito</div>
+          <div class="font-opt" data-font="atkinson">Atkinson</div>
+          <div class="font-opt" data-font="iawriter">iA Mono</div>
+          <div class="font-opt" data-font="dyslexic" data-i18n="fontDyslexic">易读体</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<!-- FOOTER -->
+<div class="footer">
+  <span class="footer-ver">LOCKIN · v1.1</span>
+  <button class="reset-btn" id="resetBtn" data-i18n="reset">↺ 重置</button>
+</div>
+
+<script src="popup.js"></script>
+</body>
+</html>

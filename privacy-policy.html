@@ -1,0 +1,331 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Lockin — Privacy Policy / 隐私权政策</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Syne:wght@700;800;900&family=Noto+Sans+SC:wght@400;500;700&family=DM+Mono:wght@400;500&display=swap');
+
+  :root {
+    --bg: #f0eee8;
+    --ink: #1a1612;
+    --ink-sub: rgba(26,22,18,0.5);
+    --c1: #5E00CC;
+    --radius: 20px;
+  }
+
+  *, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
+
+  body {
+    background: var(--bg);
+    color: var(--ink);
+    font-family: 'Noto Sans SC', sans-serif;
+    font-size: 15px;
+    line-height: 1.85;
+    min-height: 100vh;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='200' height='200' filter='url(%23n)' opacity='1'/%3E%3C/svg%3E");
+    background-blend-mode: overlay;
+  }
+
+  .container {
+    max-width: 680px;
+    margin: 0 auto;
+    padding: 60px 28px 80px;
+  }
+
+  /* Header */
+  .header {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    margin-bottom: 48px;
+  }
+
+  .logo-mark {
+    width: 52px; height: 52px;
+    border-radius: 14px;
+    background: var(--ink);
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+  }
+  .logo-mark svg { color: var(--bg); }
+
+  .logo-name {
+    font-family: 'Syne', sans-serif;
+    font-weight: 900;
+    font-size: 26px;
+    letter-spacing: -0.03em;
+    line-height: 1;
+  }
+  .logo-sub {
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    color: var(--ink-sub);
+    letter-spacing: 0.1em;
+    margin-top: 4px;
+  }
+
+  /* Title */
+  h1 {
+    font-family: 'Syne', sans-serif;
+    font-weight: 900;
+    font-size: 32px;
+    letter-spacing: -0.03em;
+    margin-bottom: 8px;
+    line-height: 1.2;
+  }
+
+  .update-date {
+    font-family: 'DM Mono', monospace;
+    font-size: 12px;
+    color: var(--ink-sub);
+    letter-spacing: 0.08em;
+    margin-bottom: 40px;
+  }
+
+  /* Sections */
+  .section {
+    background: rgba(255,255,255,0.35);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255,255,255,0.6);
+    border-radius: var(--radius);
+    padding: 28px 28px 24px;
+    margin-bottom: 16px;
+    box-shadow: 4px 4px 0 rgba(0,0,0,0.06);
+  }
+
+  .section h2 {
+    font-family: 'Syne', sans-serif;
+    font-weight: 800;
+    font-size: 17px;
+    letter-spacing: -0.02em;
+    margin-bottom: 12px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .section h2 .icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px; height: 32px;
+    border-radius: 9px;
+    color: #fff;
+    font-size: 15px;
+    flex-shrink: 0;
+  }
+
+  .section p {
+    color: rgba(26,22,18,0.75);
+    margin-bottom: 10px;
+  }
+  .section p:last-child { margin-bottom: 0; }
+
+  .highlight-box {
+    background: var(--ink);
+    color: var(--bg);
+    border-radius: var(--radius);
+    padding: 28px 28px 24px;
+    margin-bottom: 16px;
+    box-shadow: 4px 4px 0 rgba(0,0,0,0.12);
+  }
+  .highlight-box h2 {
+    font-family: 'Syne', sans-serif;
+    font-weight: 900;
+    font-size: 20px;
+    letter-spacing: -0.02em;
+    margin-bottom: 10px;
+    color: #fff;
+  }
+  .highlight-box p {
+    color: rgba(240,236,228,0.7);
+    font-size: 14px;
+  }
+
+  /* Footer */
+  .footer {
+    margin-top: 48px;
+    text-align: center;
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    color: var(--ink-sub);
+    letter-spacing: 0.1em;
+  }
+
+  /* Lang toggle */
+  .lang-toggle {
+    display: flex;
+    justify-content: flex-end;
+    margin-bottom: 20px;
+  }
+  .lang-toggle button {
+    font-family: 'DM Mono', monospace;
+    font-size: 12px;
+    font-weight: 500;
+    background: var(--ink);
+    color: var(--bg);
+    border: none;
+    border-radius: 8px;
+    padding: 6px 14px;
+    cursor: pointer;
+    letter-spacing: 0.04em;
+    transition: transform 0.1s;
+  }
+  .lang-toggle button:active { transform: scale(0.95); }
+
+  .en { display: none; }
+  body.show-en .en { display: block; }
+  body.show-en .zh { display: none; }
+</style>
+</head>
+<body>
+
+<div class="container">
+
+  <!-- Lang toggle -->
+  <div class="lang-toggle">
+    <button onclick="document.body.classList.toggle('show-en'); this.textContent = document.body.classList.contains('show-en') ? '切换中文' : 'English'">English</button>
+  </div>
+
+  <!-- Header -->
+  <div class="header">
+    <div class="logo-mark">
+      <svg width="30" height="22" viewBox="0 0 52 36" fill="none">
+        <rect x="1" y="1" width="20" height="20" rx="5" fill="none" stroke="currentColor" stroke-width="3"/>
+        <circle cx="40" cy="11" r="10" fill="none" stroke="currentColor" stroke-width="3"/>
+        <line x1="21" y1="11" x2="30" y2="11" stroke="currentColor" stroke-width="3" stroke-linecap="round"/>
+        <circle cx="11" cy="11" r="4.5" fill="currentColor"/>
+        <circle cx="40" cy="11" r="4.5" fill="currentColor"/>
+      </svg>
+    </div>
+    <div>
+      <div class="logo-name">Lockin</div>
+      <div class="logo-sub">PRIVACY POLICY</div>
+    </div>
+  </div>
+
+  <!-- ==================== 中文 ==================== -->
+  <div class="zh">
+    <h1>隐私权政策</h1>
+    <div class="update-date">最后更新：2025 年 7 月</div>
+
+    <div class="highlight-box">
+      <h2>核心承诺</h2>
+      <p>Lockin 是一款纯本地运行的阅读辅助扩展。我们不收集、不传输、不存储您的任何个人数据。您的阅读内容和浏览行为完全属于您自己。</p>
+    </div>
+
+    <div class="section">
+      <h2><span class="icon" style="background:#5E00CC">1</span>我们收集哪些数据</h2>
+      <p><strong>无。</strong> Lockin 不收集任何个人身份信息、浏览历史、页面内容或用户行为数据。</p>
+    </div>
+
+    <div class="section">
+      <h2><span class="icon" style="background:#00794A">2</span>本地存储的使用</h2>
+      <p>Lockin 使用 Chrome 的 <code>chrome.storage.sync</code> API 来保存您的偏好设置（如功能开关状态、滑块数值、主题选择、语言偏好等）。</p>
+      <p>这些数据仅用于在您的 Chrome 设备之间同步设置，完全由 Chrome 浏览器自身管理，Lockin 无法也不会将这些数据发送至任何外部服务器。</p>
+    </div>
+
+    <div class="section">
+      <h2><span class="icon" style="background:#CC0055">3</span>网络请求</h2>
+      <p>Lockin 仅在启用「字体切换」功能时，可能从 Google Fonts 或 jsDelivr CDN 加载字体文件。除此之外，Lockin 不会发起任何网络请求。</p>
+    </div>
+
+    <div class="section">
+      <h2><span class="icon" style="background:#CC4400">4</span>权限说明</h2>
+      <p><strong>activeTab</strong> — 仅在用户主动激活时访问当前标签页，用于在页面上应用阅读辅助效果（如 Bionic Reading、行高亮等）。</p>
+      <p><strong>storage</strong> — 用于保存和同步用户的偏好设置。</p>
+    </div>
+
+    <div class="section">
+      <h2><span class="icon" style="background:#0044CC">5</span>第三方服务</h2>
+      <p>Lockin 不使用任何分析工具（如 Google Analytics）、广告服务或第三方追踪器。</p>
+    </div>
+
+    <div class="section">
+      <h2><span class="icon" style="background:#007799">6</span>数据安全</h2>
+      <p>由于所有数据都存储在您本地的浏览器中，不存在数据泄露的风险。Lockin 不运行任何远程服务器。</p>
+    </div>
+
+    <div class="section">
+      <h2><span class="icon" style="background:#336600">7</span>儿童隐私</h2>
+      <p>Lockin 不针对 13 岁以下的儿童，也不会故意收集任何儿童的个人信息。</p>
+    </div>
+
+    <div class="section">
+      <h2><span class="icon" style="background:#AA0022">8</span>政策变更</h2>
+      <p>如果本隐私政策发生重大变更，我们会在此页面更新并修改「最后更新」日期。建议您定期查看。</p>
+    </div>
+
+    <div class="section">
+      <h2><span class="icon" style="background:#1a1612">✉</span>联系方式</h2>
+      <p>如果您对本隐私政策有任何疑问，请通过以下方式联系我们：</p>
+      <p><strong>Email：</strong>dubg325554777@gmail.com</p>
+    </div>
+  </div>
+
+  <!-- ==================== English ==================== -->
+  <div class="en">
+    <h1>Privacy Policy</h1>
+    <div class="update-date">Last updated: July 2025</div>
+
+    <div class="highlight-box">
+      <h2>Our Promise</h2>
+      <p>Lockin is a fully local reading-assistance extension. We do not collect, transmit, or store any of your personal data. Your reading content and browsing behavior remain entirely your own.</p>
+    </div>
+
+    <div class="section">
+      <h2><span class="icon" style="background:#5E00CC">1</span>Data We Collect</h2>
+      <p><strong>None.</strong> Lockin does not collect any personally identifiable information, browsing history, page content, or user behavior data.</p>
+    </div>
+
+    <div class="section">
+      <h2><span class="icon" style="background:#00794A">2</span>Local Storage Usage</h2>
+      <p>Lockin uses Chrome's <code>chrome.storage.sync</code> API to save your preferences (feature toggles, slider values, theme, language, etc.).</p>
+      <p>This data is only used to sync settings across your Chrome devices and is managed entirely by the Chrome browser itself. Lockin cannot and does not send this data to any external server.</p>
+    </div>
+
+    <div class="section">
+      <h2><span class="icon" style="background:#CC0055">3</span>Network Requests</h2>
+      <p>When the "Font Switcher" feature is enabled, Lockin may load font files from Google Fonts or jsDelivr CDN. Apart from this, Lockin does not make any network requests.</p>
+    </div>
+
+    <div class="section">
+      <h2><span class="icon" style="background:#CC4400">4</span>Permissions Explained</h2>
+      <p><strong>activeTab</strong> — Accesses the current tab only when the user actively enables the extension, in order to apply reading aids (Bionic Reading, line highlight, etc.).</p>
+      <p><strong>storage</strong> — Used to save and sync user preferences.</p>
+    </div>
+
+    <div class="section">
+      <h2><span class="icon" style="background:#0044CC">5</span>Third-Party Services</h2>
+      <p>Lockin does not use any analytics tools (such as Google Analytics), advertising services, or third-party trackers.</p>
+    </div>
+
+    <div class="section">
+      <h2><span class="icon" style="background:#007799">6</span>Data Security</h2>
+      <p>Since all data is stored locally in your browser, there is no risk of data breach. Lockin does not operate any remote servers.</p>
+    </div>
+
+    <div class="section">
+      <h2><span class="icon" style="background:#336600">7</span>Children's Privacy</h2>
+      <p>Lockin is not directed at children under 13 and does not intentionally collect any personal information from children.</p>
+    </div>
+
+    <div class="section">
+      <h2><span class="icon" style="background:#AA0022">8</span>Changes to This Policy</h2>
+      <p>If we make significant changes to this privacy policy, we will update this page and revise the "Last Updated" date. We recommend checking this page periodically.</p>
+    </div>
+
+    <div class="section">
+      <h2><span class="icon" style="background:#1a1612">✉</span>Contact</h2>
+      <p>If you have any questions about this privacy policy, please reach out:</p>
+      <p><strong>Email:</strong> dubg325554777@gmail.com</p>
+    </div>
+  </div>
+
+  <div class="footer">LOCKIN · PRIVACY POLICY · v1.0</div>
+
+</div>
+
+</body>
+</html>

@@ -1,0 +1,10 @@
+/* ADHD Reader - injected base styles */
+/* 其余动态样式由 content.js 控制 */
+
+#adhd-progress {
+  border-radius: 0 2px 2px 0;
+}
+
+.adhd-bionic {
+  font-weight: 700 !important;
+}
